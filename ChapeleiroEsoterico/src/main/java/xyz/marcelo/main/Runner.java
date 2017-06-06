@@ -55,18 +55,18 @@ public class Runner
                 List<Atleta> copia = new ArrayList<>(ATLETAS);
                 Time melhorTime = Time.VAZIO;
 
-                // cada thread gerará 1 milhao de times aleatórios
+                // cada thread gerará times aleatórios indefinidamente
                 Logger.debug("Iniciando Thread [{}]\n", Thread.currentThread().getId());
                 while (true)
                 {
                     // caso o time gerado seja o melhor até o momento nesta thread, atualiza
                     Time timeAleatorio = geraTimeAleatorio(copia);
-                    if (validaTime(timeAleatorio) && timeAleatorio.getPontos() > melhorTime.getPontos())
+                    if (validaTime(timeAleatorio) && timeAleatorio.getFitness() > melhorTime.getFitness())
                     {
                         melhorTime = timeAleatorio;
 
                         // caso o time gerado seja o melhor até o momento em todas threads, atualiza
-                        if (melhorTime.getPontos() > MELHOR_TIME_GLOBAL.get().getPontos())
+                        if (melhorTime.getFitness() > MELHOR_TIME_GLOBAL.get().getFitness())
                         {
                             MELHOR_TIME_GLOBAL.set(melhorTime);
                             Logger.debug("[Thread #{}]\n\t[{}] : {}\n", Thread.currentThread().getId(), MELHOR_TIME_GLOBAL.get().getPontos(), MELHOR_TIME_GLOBAL.get().toDetailedString());
