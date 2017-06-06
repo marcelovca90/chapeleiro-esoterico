@@ -12,7 +12,7 @@ public class Time
     private Collection<Atleta> atletas;
     private double pontos;
     private double preco;
-    private double precoPorPonto;
+    private double fitness;
     private Map<String, Integer> formacao;
 
     public Collection<Atleta> getAtletas()
@@ -20,7 +20,7 @@ public class Time
         return atletas;
     }
 
-    public synchronized double getPontos()
+    public double getPontos()
     {
         return pontos;
     }
@@ -30,9 +30,9 @@ public class Time
         return preco;
     }
 
-    public double getPrecoPorPonto()
+    public double getFitness()
     {
-        return precoPorPonto;
+        return fitness;
     }
 
     public Map<String, Integer> getFormacao()
@@ -45,7 +45,7 @@ public class Time
         this.atletas = new ArrayList<>();
         this.pontos = 0;
         this.preco = 0;
-        this.precoPorPonto = 0;
+        this.fitness = 0;
         this.formacao = new HashMap<>();
 
         for (Atleta a : atletas)
@@ -53,33 +53,32 @@ public class Time
             this.atletas.add(a);
             this.pontos += a.getPontos();
             this.preco += a.getPreco();
+            this.fitness += a.getFitness();
 
             String abreviacao = a.getPosicao().getAbreviacao();
             this.formacao.putIfAbsent(abreviacao, 0);
             this.formacao.put(abreviacao, this.formacao.get(abreviacao) + 1);
         }
-
-        this.precoPorPonto = (this.preco / this.pontos);
     }
 
     @Override
     public String toString()
     {
-        return "Time [atletas=" + atletas + ", pontos=" + pontos + ", preco=" + preco + ", precoPorPonto=" + precoPorPonto + "]";
+        return "Time [formacao=" + formacao + ", pontos=" + pontos + ", preco=" + preco + ", fitness=" + fitness + " + atletas=" + atletas + "]";
     }
 
     public String toShortString()
     {
-        return "Time [pontos=" + pontos + ", preco=" + preco + ", precoPorPonto=" + precoPorPonto + ", formacao=" + formacao + "]";
+        return "Time [formacao=" + formacao.values() + ",pontos=" + pontos + ", preco=" + preco + ", fitness=" + fitness + "]";
     }
 
     public String toDetailedString()
     {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Time [pontos=" + pontos + ", preco=" + preco + ", precoPorPonto=" + precoPorPonto + ", formacao=" + formacao + ", atletas=");
+        sb.append("Time [formacao=" + formacao + ", pontos=" + pontos + ", preco=" + preco + ", fitness=" + fitness + ", atletas=");
 
-        atletas.forEach(a -> sb.append("\n\t" + a));
+        atletas.forEach(a -> sb.append("\n\t\t" + a.toShortString()));
 
         sb.append("]");
 

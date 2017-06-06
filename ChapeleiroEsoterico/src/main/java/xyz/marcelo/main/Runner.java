@@ -27,11 +27,13 @@ public class Runner
 
     private static List<Atleta> ATLETAS = new ArrayList<>();
     private static Random RANDOM = new Random();
-    private static int ORCAMENTO = 10000;
+    private static int THREADS, ORCAMENTO;
 
     public static void main(String[] args) throws Exception
     {
-        final int qtdThreads = args.length == 1 ? Integer.parseInt(args[0]) : 2;
+        THREADS = args.length == 2 ? Integer.parseInt(args[0]) : 1;
+        ORCAMENTO = args.length == 2 ? Integer.parseInt(args[1]) : 10000;
+        Logger.debug("Threads: {} Orcamento: {}\n", THREADS, ORCAMENTO);
 
         // faz um GET na API do Cartola para pegar os dados dos jogadores
         HttpResponse<JsonNode> response = Unirest.get(URL_API_TODOS_JOGADORES).asJson();
@@ -45,12 +47,11 @@ public class Runner
         // remove atletas inelegíveis, isto é, com status diferente de Provável
         ATLETAS = ATLETAS.stream().filter(a -> a.getStatus().getNome().equals("Provável")).collect(Collectors.toList());
 
-        for (int i = 0; i < qtdThreads; i++)
+        for (int i = 0; i < THREADS; i++)
         {
             new Thread(() ->
             {
-                // cria uma cópia da lista de atletas que será usada por cada
-                // thread
+                // cria uma cópia da lista de atletas que será usada por cada thread
                 List<Atleta> copia = new ArrayList<>(ATLETAS);
                 Time melhorTime = Time.VAZIO;
 
@@ -58,20 +59,17 @@ public class Runner
                 Logger.debug("Iniciando Thread [{}]\n", Thread.currentThread().getId());
                 while (true)
                 {
-                    // caso o time gerado seja o melhor até o momento nesta
-                    // thread, atualiza
+                    // caso o time gerado seja o melhor até o momento nesta thread, atualiza
                     Time timeAleatorio = geraTimeAleatorio(copia);
                     if (validaTime(timeAleatorio) && timeAleatorio.getPontos() > melhorTime.getPontos())
                     {
                         melhorTime = timeAleatorio;
 
-                        // caso o time gerado seja o melhor até o momento em
-                        // todas threads, atualiza
+                        // caso o time gerado seja o melhor até o momento em todas threads, atualiza
                         if (melhorTime.getPontos() > MELHOR_TIME_GLOBAL.get().getPontos())
                         {
                             MELHOR_TIME_GLOBAL.set(melhorTime);
-                            Logger.debug("[Thread #{}] [{}] : {}\n", Thread.currentThread().getId(),
-                                MELHOR_TIME_GLOBAL.get().getPontos(), MELHOR_TIME_GLOBAL.get().toDetailedString());
+                            Logger.debug("[Thread #{}]\n\t[{}] : {}\n", Thread.currentThread().getId(), MELHOR_TIME_GLOBAL.get().getPontos(), MELHOR_TIME_GLOBAL.get().toDetailedString());
                         }
                     }
                 }
@@ -91,6 +89,10 @@ public class Runner
     {
         // valida orcamento
         if (t.getPreco() > ORCAMENTO)
+            return false;
+
+        // valida jogadores
+        else if (t.getAtletas().stream().distinct().count() != 12)
             return false;
 
         // valida formacao

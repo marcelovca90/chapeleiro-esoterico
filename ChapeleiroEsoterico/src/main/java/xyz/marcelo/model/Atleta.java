@@ -84,4 +84,9 @@ public class Atleta
     {
         return "Atleta [id=" + id + ", apelido=" + apelido + ", posicao=" + posicao + ", status=" + status + ", pontos=" + pontos + ", preco=" + preco + ", variacao=" + variacao + ", media=" + media + ", jogos=" + jogos + ", fitness=" + fitness + "]";
     }
+
+    public String toShortString()
+    {
+        return "Atleta [apelido=" + apelido + ", posicao=" + posicao.getNome() + ", pontos=" + pontos + ", preco=" + preco + ", fitness=" + fitness + "]";
+    }
 }
