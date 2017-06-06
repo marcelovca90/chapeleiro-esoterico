@@ -69,7 +69,7 @@ public class Runner
                         if (melhorTime.getFitness() > MELHOR_TIME_GLOBAL.get().getFitness())
                         {
                             MELHOR_TIME_GLOBAL.set(melhorTime);
-                            Logger.debug("[Thread #{}]\n\t[{}] : {}\n", Thread.currentThread().getId(), MELHOR_TIME_GLOBAL.get().getPontos(), MELHOR_TIME_GLOBAL.get().toDetailedString());
+                            Logger.debug("[Thread #{}]\n\t[{}] : {}\n", Thread.currentThread().getId(), MELHOR_TIME_GLOBAL.get().getFitness(), MELHOR_TIME_GLOBAL.get().toDetailedString());
                         }
                     }
                 }
