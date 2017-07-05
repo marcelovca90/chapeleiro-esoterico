@@ -1,4 +1,4 @@
-package xyz.marcelo.main;
+package io.github.marcelovca90.main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 
-import xyz.marcelo.model.Atleta;
-import xyz.marcelo.model.Formacao;
-import xyz.marcelo.model.Time;
+import io.github.marcelovca90.model.Atleta;
+import io.github.marcelovca90.model.Formacao;
+import io.github.marcelovca90.model.Time;
 
 // https://github.com/wgenial/cartrolandofc/blob/master/nova-api.md
 public class Runner

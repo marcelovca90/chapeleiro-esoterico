@@ -1,4 +1,4 @@
-package xyz.marcelo.model;
+package io.github.marcelovca90.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
