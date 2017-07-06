@@ -7,11 +7,12 @@ import java.util.Map;
 
 public class Time
 {
-    public static Time VAZIO = new Time(new Atleta[0]);
+    public static Time VAZIO = new Time(Estrategia.NENHUMA, new Atleta[0]);
 
     private Collection<Atleta> atletas;
-    private double pontos;
     private double preco;
+    private double pontos;
+    private double tendencia;
     private double fitness;
     private Map<String, Integer> formacao;
 
@@ -20,14 +21,19 @@ public class Time
         return atletas;
     }
 
+    public double getPreco()
+    {
+        return preco;
+    }
+
     public double getPontos()
     {
         return pontos;
     }
 
-    public double getPreco()
+    public double getTendencia()
     {
-        return preco;
+        return tendencia;
     }
 
     public double getFitness()
@@ -40,43 +46,58 @@ public class Time
         return formacao;
     }
 
-    public Time(Atleta... atletas)
+    public Time(Estrategia estrategia, Atleta... atletas)
     {
         this.atletas = new ArrayList<>();
-        this.pontos = 0;
         this.preco = 0;
-        this.fitness = 0;
+        this.pontos = 0;
+        this.tendencia = 0;
         this.formacao = new HashMap<>();
 
         for (Atleta a : atletas)
         {
             this.atletas.add(a);
-            this.pontos += a.getPontos();
             this.preco += a.getPreco();
-            this.fitness += a.getFitness();
+            this.pontos += a.getPontos();
+            this.tendencia += a.getTendencia();
 
             String abreviacao = a.getPosicao().getAbreviacao();
             this.formacao.putIfAbsent(abreviacao, 0);
             this.formacao.put(abreviacao, this.formacao.get(abreviacao) + 1);
+        }
+
+        switch (estrategia)
+        {
+            case NENHUMA:
+                this.fitness = Double.MIN_VALUE;
+                break;
+
+            case PONTOS:
+                this.fitness = this.pontos;
+                break;
+
+            case TENDENCIA:
+                this.fitness = this.tendencia;
+                break;
         }
     }
 
     @Override
     public String toString()
     {
-        return "Time [formacao=" + formacao + ", pontos=" + pontos + ", preco=" + preco + ", fitness=" + fitness + " + atletas=" + atletas + "]";
+        return "Time [formacao=" + formacao + ", preco=" + preco + ", pontos=" + pontos + ", tendencia=" + tendencia + ", fitness=" + fitness + " + atletas=" + atletas + "]";
     }
 
     public String toShortString()
     {
-        return "Time [formacao=" + formacao.values() + ",pontos=" + pontos + ", preco=" + preco + ", fitness=" + fitness + "]";
+        return "Time [formacao=" + formacao.values() + ", preco=" + preco + ", pontos=" + pontos + ", tendencia=" + tendencia + ", fitness=" + fitness + "]";
     }
 
     public String toDetailedString()
     {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Time [formacao=" + formacao + ", pontos=" + pontos + ", preco=" + preco + ", fitness=" + fitness + ", atletas=");
+        sb.append("Time [formacao=" + formacao + ", preco=" + preco + ", pontos=" + pontos + ", tendencia=" + tendencia + ", fitness=" + fitness + ", atletas=");
 
         atletas.forEach(a -> sb.append("\n\t\t" + a.toShortString()));
 

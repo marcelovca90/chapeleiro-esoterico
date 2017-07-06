@@ -15,6 +15,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 
 import io.github.marcelovca90.model.Atleta;
+import io.github.marcelovca90.model.Estrategia;
 import io.github.marcelovca90.model.Formacao;
 import io.github.marcelovca90.model.Time;
 
@@ -28,12 +29,14 @@ public class Runner
     private static List<Atleta> ATLETAS = new ArrayList<>();
     private static Random RANDOM = new Random();
     private static int THREADS, ORCAMENTO;
+    private static Estrategia ESTRATEGIA;
 
     public static void main(String[] args) throws Exception
     {
-        THREADS = args.length == 2 ? Integer.parseInt(args[0]) : 1;
-        ORCAMENTO = args.length == 2 ? Integer.parseInt(args[1]) : 10000;
-        Logger.debug("Threads: {} Orcamento: {}\n", THREADS, ORCAMENTO);
+        THREADS = args.length == 3 ? Integer.parseInt(args[0]) : 1;
+        ORCAMENTO = args.length == 3 ? Integer.parseInt(args[1]) : 10000;
+        ESTRATEGIA = args.length == 3 ? Estrategia.valueOf(args[2].toUpperCase()) : Estrategia.PONTOS;
+        Logger.debug("Threads: {} Orcamento: {} Estrategia: {}\n", THREADS, ORCAMENTO, ESTRATEGIA);
 
         // faz um GET na API do Cartola para pegar os dados dos jogadores
         HttpResponse<JsonNode> response = Unirest.get(URL_API_TODOS_JOGADORES).asJson();
@@ -82,7 +85,7 @@ public class Runner
         Atleta[] escalacao = new Atleta[12];
         for (int i = 0; i < 12; i++)
             escalacao[i] = atletas.get(RANDOM.nextInt(ATLETAS.size()));
-        return new Time(escalacao);
+        return new Time(ESTRATEGIA, escalacao);
     }
 
     private static boolean validaTime(Time t)

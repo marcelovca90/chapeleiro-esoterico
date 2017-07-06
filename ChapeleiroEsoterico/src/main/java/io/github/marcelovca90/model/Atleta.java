@@ -13,7 +13,7 @@ public class Atleta
     private int variacao;
     private int media;
     private int jogos;
-    private int fitness;
+    private int tendencia;
 
     public long getId()
     {
@@ -35,14 +35,14 @@ public class Atleta
         return status;
     }
 
-    public int getPontos()
-    {
-        return pontos;
-    }
-
     public int getPreco()
     {
         return preco;
+    }
+
+    public int getPontos()
+    {
+        return pontos;
     }
 
     public int getVariacao()
@@ -60,9 +60,9 @@ public class Atleta
         return jogos;
     }
 
-    public int getFitness()
+    public int getTendencia()
     {
-        return fitness;
+        return tendencia;
     }
 
     public Atleta(JSONObject json)
@@ -71,22 +71,23 @@ public class Atleta
         this.apelido = json.getString("apelido");
         this.posicao = new Posicao(json.getInt("posicao_id"));
         this.status = new Status(json.getInt("status_id"));
-        this.pontos = (int) (100 * json.getDouble("pontos_num"));
         this.preco = (int) (100 * json.getDouble("preco_num"));
+        this.pontos = (int) (100 * json.getDouble("pontos_num"));
         this.variacao = (int) (100 * json.getDouble("variacao_num"));
         this.media = (int) (100 * json.getDouble("media_num"));
         this.jogos = json.getInt("jogos_num");
-        this.fitness = (pontos > media ? media + Math.abs(variacao) : media - Math.abs(variacao));
+        this.tendencia = (pontos > media ? media + Math.abs(variacao) : media - Math.abs(variacao));
     }
 
     @Override
     public String toString()
     {
-        return "Atleta [id=" + id + ", apelido=" + apelido + ", posicao=" + posicao + ", status=" + status + ", pontos=" + pontos + ", preco=" + preco + ", variacao=" + variacao + ", media=" + media + ", jogos=" + jogos + ", fitness=" + fitness + "]";
+        return "Atleta [id=" + id + ", apelido=" + apelido + ", posicao=" + posicao + ", status=" + status + ", preco=" + preco + ", pontos=" + pontos + ", variacao=" + variacao + ", media=" + media + ", jogos=" + jogos + ", tendencia="
+                + tendencia + "]";
     }
 
     public String toShortString()
     {
-        return "Atleta [apelido=" + apelido + ", posicao=" + posicao.getNome() + ", pontos=" + pontos + ", preco=" + preco + ", fitness=" + fitness + "]";
+        return "Atleta [apelido=" + apelido + ", posicao=" + posicao.getNome() + ", preco=" + preco + ", pontos=" + pontos + ", tendencia=" + tendencia + "]";
     }
 }
